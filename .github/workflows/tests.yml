@@ -19,6 +19,14 @@ jobs:
           - laravel: 12.*
             testbench: 10.*
 
+        exclude:
+          - php: 8.4
+            laravel: 11.*
+            testbench: 9.*
+          - php: 8.4
+            laravel: 12.*
+            testbench: 10.*
+
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -32,6 +40,11 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
+
+      - name: Install Aspell
+        shell: bash
+        run: |
+          sudo apt-get update && sudo apt-get install -y aspell aspell-en
 
       - name: Setup problem matchers
         run: |
