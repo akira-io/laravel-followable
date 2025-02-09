@@ -14,7 +14,7 @@ effortlessly.
 You can install the package via composer:
 
 ```bash
-composer require akira-io/followable
+composer require akira-io/laravel-followable
 ```
 
 You can publish and run the migrations with:
