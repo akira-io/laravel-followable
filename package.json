@@ -34,23 +34,10 @@
             "section": "Bug Fixes"
           },
           "chore": {
-            "section": "Miscellaneous Chores",
-            "hidden": false
+            "section": "Miscellaneous Chores"
           },
           "refactor": {
             "section": "Code Refactoring"
-          },
-          "revert": {
-            "section": "Reverts"
-          },
-          "docs": {
-            "section": "Documentation"
-          },
-          "style": {
-            "section": "Styles"
-          },
-          "test": {
-            "section": "Tests"
           }
         }
       }
