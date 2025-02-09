@@ -12,6 +12,9 @@ final class FollowableCommand extends Command
 
     public $description = 'My command';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
         $this->comment('All done');

@@ -12,14 +12,19 @@ use Illuminate\Support\Str;
 
 final class Followable extends Model
 {
-    protected $fillable = ['user_id', 'followable_id', 'followable_type', 'accepted_at'];
+    protected $fillable = [
+        'user_id',
+        'followable_id',
+        'followable_type',
+        'accepted_at',
+    ];
 
     /**
      * Get the table associated with the model.
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = config('follow.followable_table', 'followable');
+        $this->table = config('followable.followable_table', 'followable');
 
         parent::__construct($attributes);
     }
@@ -60,7 +65,7 @@ final class Followable extends Model
      */
     public function scopeWithType(Builder $query, string $type): Builder
     {
-        return $query->where('followable_type', app($type)->getMorphClass());
+        return $query->where('followable_type', resolve($type)->getMorphClass());
     }
 
     /**
@@ -77,7 +82,7 @@ final class Followable extends Model
      */
     public function scopeFollowedBy(Builder $query, Model $follower): Builder
     {
-        return $query->where(config('follow.user_foreign_key', 'user_id'), $follower->getKey());
+        return $query->where(config('followable.user_foreign_key', 'user_id'), $follower->getKey());
     }
 
     /**
@@ -112,6 +117,11 @@ final class Followable extends Model
         });
     }
 
+    /**
+     * Get the attributes that should be type-cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
 

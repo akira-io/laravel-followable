@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Facade;
  */
 final class Followable extends Facade
 {
+    /**
+     * Get the facade accessor.
+     */
     protected static function getFacadeAccessor(): string
     {
         return \Akira\Followable\Followable::class;
