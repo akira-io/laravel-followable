@@ -1,0 +1,58 @@
+{
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@release-it/conventional-changelog": "^10.0.0",
+    "release-it": "^18.1.2"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): ${version}"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}",
+      "draft": false,
+      "preRelease": false,
+      "tokenRef": "GITHUB_TOKEN"
+    },
+    "scripts": {
+      "release": "release-it"
+    },
+    "npm": {
+      "publish": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "infile": "CHANGELOG.md",
+        "preset": "angular",
+        "types": {
+          "feat": {
+            "section": "Features"
+          },
+          "fix": {
+            "section": "Bug Fixes"
+          },
+          "chore": {
+            "section": "Miscellaneous Chores"
+          },
+          "refactor": {
+            "section": "Code Refactoring"
+          },
+          "revert": {
+            "section": "Reverts"
+          },
+          "docs": {
+            "section": "Documentation"
+          },
+          "style": {
+            "section": "Styles"
+          },
+          "test": {
+            "section": "Tests"
+          }
+        }
+      }
+    }
+  }
+}
