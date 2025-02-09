@@ -2,6 +2,11 @@ name: Tests
 
 on: [ push, pull_request ]
 
+env:
+  PHP_VERSION: 8.4
+  STABILITY: prefer-stable
+  EXTENSIONS: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -9,10 +14,7 @@ jobs:
       fail-fast: true
       matrix:
         os: [ ubuntu-latest, macos-latest ]
-        stability: [ prefer-stable ]
-        php: [ 8.4 ]
         laravel: [ 11.*, 10.* ]
-        collision: [ 9.0, 8.0 ]
         include:
           - laravel: 11.*
             testbench: 9.*
@@ -26,18 +28,26 @@ jobs:
           - laravel: 10.*
             collision: 9.*
 
-
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: PHP ${{ env.PHP_VERSION }} - Laravel ${{ matrix.laravel }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cache Composer dependencies
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.EXTENSIONS }}
           coverage: pcov
 
       - name: Setup problem matchers
@@ -49,8 +59,8 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
-            composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
+          composer update --${{ env.STABILITY }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
