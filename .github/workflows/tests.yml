@@ -18,10 +18,10 @@ jobs:
         collision: [ 7.*, 8.* ]  # Versões do Collision, ajustadas para Laravel 10 e 11
         include:
           - laravel: 10.*
-            testbench: ^8.0
+            testbench: ^8.0  # Ajustando para a versão do Testbench adequada
             collision: ^7.0  # Collision para Laravel 10
           - laravel: 11.*
-            testbench: ^9.0
+            testbench: ^9.0  # Ajustando para a versão do Testbench adequada
             collision: ^8.0  # Collision para Laravel 11
 
     name: Test Laravel ${ { matrix.laravel }} - PHP ${ { matrix.php }} - Collision ${ { matrix.collision }}
@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update  # Incluindo a versão do Testbench
           composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
           composer update --prefer-dist --no-interaction
 
