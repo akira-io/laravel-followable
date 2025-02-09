@@ -34,7 +34,8 @@
             "section": "Bug Fixes"
           },
           "chore": {
-            "section": "Miscellaneous Chores"
+            "section": "Miscellaneous Chores",
+            "hidden": false
           },
           "refactor": {
             "section": "Code Refactoring"
