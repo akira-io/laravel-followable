@@ -17,13 +17,11 @@ jobs:
           - laravel: 11.*
             testbench: 9.*
             carbon: ^2.63
+            collision_version: ^8.0
           - laravel: 10.*
             testbench: 8.*
             carbon: ^2.63
-        exclude:
-          - laravel: 11.*
-            contracts: 10.*
-
+            collision_version: ^7.0
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
@@ -46,6 +44,7 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" --no-interaction --no-update 
           composer require --dev "orchestra/testbench:${{ matrix.testbench }}"  --no-interaction --no-update
+          composer require "nunomaduro/collision:${{ matrix.collision_version }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
