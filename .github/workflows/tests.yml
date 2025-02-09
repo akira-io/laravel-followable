@@ -4,16 +4,15 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ ubuntu-latest, macos-latest ]
         stability: [ prefer-stable ]
         php: [ 8.4 ]
         laravel: [ 11.*, 10.* ]
         collision: [ 9.0, 8.0 ]
-        testbench: [ 9.*, 8.* ]
         include:
           - laravel: 11.*
             testbench: 9.*
@@ -26,6 +25,7 @@ jobs:
             collision: 8.*
           - laravel: 10.*
             collision: 9.*
+
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -49,7 +49,7 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
-          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
+            composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
