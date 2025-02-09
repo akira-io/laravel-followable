@@ -19,6 +19,11 @@ jobs:
           - laravel: 11.*
             testbench: ^9.0
             collision: ^9.0
+        exclude:
+          - laravel: 11.*
+            collision: ^8.0
+          - laravel: 10.*
+            collision: ^9.0
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
