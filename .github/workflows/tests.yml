@@ -1,31 +1,30 @@
-name: Run Tests
+name: Test Compatibility
 
-on: [ 'push', 'pull_request' ]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        stability: [ prefer-stable ]
-        php: [ 8.4 ]
-        laravel: [ 10.*, 11.* ]
-        collision: [ 7.*, 8.* ]
+        laravel: [ 10.*, 11.* ]  # Laravel 10 e 11
+        php: [ 8.4 ]  # Versão do PHP, pode adicionar mais versões se necessário
+        collision: [ 7.*, 8.* ]  # Versões do Collision, ajustadas para Laravel 10 e 11
         include:
-          - laravel: 11.*
-            testbench: ^9.0
-            collision: ^8.0
           - laravel: 10.*
             testbench: ^8.0
-            collision: ^7.0
-        exclude:
-          - laravel: 10.*
-            collision: ^8.*
+            collision: ^7.0  # Collision para Laravel 10
           - laravel: 11.*
-            collision: ^7.*
+            testbench: ^9.0
+            collision: ^8.0  # Collision para Laravel 11
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: Test Laravel ${ { matrix.laravel }} - PHP ${ { matrix.php }} - Collision ${ { matrix.collision }}
 
     steps:
       - name: Checkout code
@@ -35,22 +34,18 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: pcov
-
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
-          composer install --no-interaction --prefer-dist
+          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
+          composer update --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
 
-      - name: Execute tests
+      - name: Run Tests
         run: composer test
