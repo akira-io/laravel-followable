@@ -4,14 +4,15 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
         php: [ 8.4 ]
         laravel: [ 12.*, 11.*, 10.* ]
-        collision: [ 9.* , 8.* ]
+        testbench: [ 10.*, 9.*, 8.* ]
+        collision: [ ^9.0, ^8.0 ]
         stability: [ prefer-stable ]
         include:
           - laravel: 10.*
@@ -25,9 +26,10 @@ jobs:
             collision: ^9.0
 
         exclude:
-          - collision: ^8.0
-            laravel: [ 11.*, 12.* ]
-
+          - laravel: 11.*
+            collision: ^8.0
+          - laravel: 12.*
+            collision: ^8.0
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -49,7 +51,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
