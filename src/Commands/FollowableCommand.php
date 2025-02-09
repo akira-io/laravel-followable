@@ -1,12 +1,14 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+declare(strict_types=1);
+
+namespace Akira\Followable\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+final class FollowableCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'followable';
 
     public $description = 'My command';
 
