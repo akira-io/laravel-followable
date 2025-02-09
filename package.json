@@ -5,6 +5,9 @@
     "@release-it/conventional-changelog": "^10.0.0",
     "release-it": "^18.1.2"
   },
+  "scripts": {
+    "release": "release-it"
+  },
   "release-it": {
     "git": {
       "commitMessage": "chore(release): ${version}"
@@ -15,9 +18,6 @@
       "draft": false,
       "preRelease": false,
       "tokenRef": "GITHUB_TOKEN"
-    },
-    "scripts": {
-      "release": "release-it"
     },
     "npm": {
       "publish": false
