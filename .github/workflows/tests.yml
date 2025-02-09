@@ -5,24 +5,26 @@ on: [ 'push', 'pull_request' ]
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 5
     strategy:
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ ubuntu-latest, macos-latest ]
+        stability: [ prefer-stable ]
         php: [ 8.4 ]
         laravel: [ 10.*, 11.* ]
-        stability: [ prefer-stable ]
-        collision: [ "^7.10.0", "^8.6.1" ]
         include:
           - laravel: 11.*
             testbench: 9.*
-            collision: "^8.6.1"
+            collision: 8.*
           - laravel: 10.*
             testbench: 8.*
-            collision: "^7.10.0"
+            collision: 7.*
+        exclude:
+          - laravel: 10.*
+            collision: 8.*
 
-    name: "PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - Collision ${{ matrix.collision }} - ${{ matrix.stability }} - ${{ matrix.os }}"
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -33,17 +35,21 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: xdebug
+          coverage: pcov
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require --dev "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
+          composer require "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}"  --dev --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
 
-      - name: Run tests
-        run: composer test --ci
+      - name: Execute tests
+        run: composer test
