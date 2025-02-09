@@ -11,6 +11,7 @@ jobs:
         os: [ ubuntu-latest ]
         php: [ 8.4 ]
         laravel: [ 11.*, 10.* ]
+        collision: [ 9.*, 8.* ]
         stability: [ prefer-stable ]
         include:
           - laravel: 10.*
