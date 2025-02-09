@@ -1,51 +1,45 @@
-name: Test Compatibility
+name: Run Tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [ push, pull_request ]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     strategy:
+      fail-fast: true
       matrix:
-        laravel: [ 10.*, 11.* ]  # Laravel 10 e 11
-        php: [ 8.4 ]  # Versão do PHP, pode adicionar mais versões se necessário
-        collision: [ 7.*, 8.* ]  # Versões do Collision, ajustadas para Laravel 10 e 11
+        os: [ ubuntu-latest ]
+        php: [ 8.4 ]
+        laravel: [ 11.*, 10.* ]
+        stability: [ prefer-lowest, prefer-stable ]
         include:
-          - laravel: 10.*
-            testbench: ^8.0  # Ajustando para a versão do Testbench adequada
-            collision: ^7.0  # Collision para Laravel 10
           - laravel: 11.*
-            testbench: ^9.0  # Ajustando para a versão do Testbench adequada
-            collision: ^8.0  # Collision para Laravel 11
-
-    name: Test Laravel ${ { matrix.laravel }} - PHP ${ { matrix.php }} - Collision ${ { matrix.collision }}
-
+            testbench: 9.*
+            carbon: ^2.63
+          - laravel: 10.*
+            testbench: 8.*
+            carbon: ^2.63
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: pcov
-
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: none
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update  # Incluindo a versão do Testbench
-          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
-          composer update --prefer-dist --no-interaction
-
+          composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.os == 'windows-latest' && '^^^' || '' }}${{ matrix.carbon }}"  --no-interaction --no-update
+          "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
       - name: List Installed Dependencies
         run: composer show -D
-
-      - name: Run Tests
-        run: composer test
+      - name: Execute tests
+        run: vendor/bin/pest --ci
