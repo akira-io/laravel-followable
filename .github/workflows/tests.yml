@@ -15,10 +15,10 @@ jobs:
         collision: [ 8.*,7.* ]
         include:
           - laravel: 11.*
-            testbench: 9.*
+            testbench: ^9.0
             collision: 8.*
           - laravel: 10.*
-            testbench: 8.*
+            testbench: ^8.0
             collision: 7.*
 
         exclude:
