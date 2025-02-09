@@ -20,6 +20,9 @@ jobs:
           - laravel: 10.*
             testbench: 8.*
             carbon: ^2.63
+        exclude:
+          - laravel: 11.*
+            contracts: 10.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
