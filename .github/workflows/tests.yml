@@ -11,8 +11,8 @@ jobs:
         os: [ ubuntu-latest ]
         stability: [ prefer-stable ]
         php: [ 8.4 ]
-        laravel: [ 11.*,10.*, ]
-        collision: [ 8.*,7.* ]
+        laravel: [ 10.*, 11.* ]
+        collision: [ 7.*, 8.* ]
         include:
           - laravel: 11.*
             testbench: ^9.0
@@ -20,12 +20,11 @@ jobs:
           - laravel: 10.*
             testbench: ^8.0
             collision: ^7.0
-
         exclude:
           - laravel: 10.*
-            collision: 8.*
+            collision: ^8.*
           - laravel: 11.*
-            collision: 7.*
+            collision: ^7.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -49,7 +48,7 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer require "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer install --no-interaction --prefer-dist
 
       - name: List Installed Dependencies
         run: composer show -D
