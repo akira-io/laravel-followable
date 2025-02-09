@@ -9,21 +9,16 @@ use Akira\Followable\Exceptions\FollowableTraitNotFoundException;
 use Akira\Followable\Followable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
 use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-
 use Illuminate\Pagination\Paginator;
-
 use Illuminate\Support\LazyCollection;
 
 use function class_uses;
 
 trait Follower
 {
-    
     /**
      * Follow a followable model.
      *
@@ -34,24 +29,24 @@ trait Follower
         if ($followable->is($this)) {
             throw new CannotFollowYourSelfException();
         }
-        
+
         $this->ensureFollowableTraitExists($followable);
-        
+
         $isPending = $this->followIsPending($followable);
-        
+
         $this->processFollow($followable, $isPending);
-        
+
         return ['pending' => $isPending];
     }
-    
-    
+
     /**
      * Unfollow a followable model.
+     *
      * @throws FollowableTraitNotFoundException
      */
     public function unfollow(Model $followable): void
     {
-        
+
         $this->ensureFollowableTraitExists($followable);
 
         $this->followings()->of($followable)->get()->each->delete();
@@ -60,7 +55,7 @@ trait Follower
     /**
      * Toggle follow a followable model.
      *
-     * @throws FollowableTraitNotFoundException
+     * @throws FollowableTraitNotFoundException|CannotFollowYourSelfException
      */
     public function toggleFollow(Model $followable): void
     {
@@ -68,15 +63,15 @@ trait Follower
             ? $this->unfollow($followable)
             : $this->follow($followable);
     }
-    
-    
+
     /**
      * Check if the model is following a followable model.
+     *
      * @throws FollowableTraitNotFoundException
      */
     public function isFollowing(Model $followable): bool
     {
-        
+
         $this->ensureFollowableTraitExists($followable);
 
         if ($this->relationLoaded('followings')) {
@@ -88,13 +83,14 @@ trait Follower
 
     /**
      * Check if the model has requested to follow a followable model.
+     *
      * @throws FollowableTraitNotFoundException
      */
     public function hasRequestedToFollow(Model $followable): bool
     {
-        
+
         $this->ensureFollowableTraitExists($followable);
-        
+
         if ($this->relationLoaded('followings')) {
             return $this->followings->whereNull('accepted_at')
                 ->where('followable_id', $followable->getKey())
@@ -107,6 +103,7 @@ trait Follower
 
     /**
      * Get the followings has many relationship.
+     *
      * @throws FollowableTraitNotFoundException
      */
     public function followings(): HasMany
@@ -139,43 +136,40 @@ trait Follower
      */
     public function attachFollowStatus($followables, ?callable $resolver = null, bool $returnFirst = false): mixed
     {
-        
+
         [$returnFirst, $followables] = $this->handleFollowables($followables, $returnFirst);
-        
+
         $followed = $this->followings()->get();
-        
+
         $this->mapFollowables($followables, $followed, $resolver);
-        
+
         return $returnFirst ? $followables->first() : $followables;
     }
-    
-    
+
     /**
      * Ensure the followable trait exists.
      */
     private function ensureFollowableTraitExists(Model $followable): void
     {
-        
-        if (!in_array(\Akira\Followable\Concerns\Followable::class, class_uses($followable))) {
+
+        if (! in_array(\Akira\Followable\Concerns\Followable::class, class_uses($followable))) {
             throw new FollowableTraitNotFoundException();
         }
     }
-    
-    
+
     /**
      * Get the followings of a followable model.
      */
     private function getFollowings(Model $followable)
     {
-        
+
         return $this->followings
             ->whereNotNull('accepted_at')
             ->where('followable_id', $followable->getKey())
             ->where('followable_type', $followable->getMorphClass())
             ->isNotEmpty();
     }
-    
-    
+
     /**
      * Map followables.
      */
@@ -184,55 +178,53 @@ trait Follower
         Collection $followed,
         ?callable $resolver
     ): void {
-        
+
         $followables->map(function ($followable) use ($followed, $resolver) {
-            
-            $resolver = $resolver ?? fn($m) => $m;
+
+            $resolver = $resolver ?? fn ($m) => $m;
             $followable = $resolver($followable);
-            
+
             if ($followable && in_array(Followable::class, class_uses($followable))) {
                 $item = $followed->where('followable_id', $followable->getKey())
                     ->where('followable_type', $followable->getMorphClass())
                     ->first();
                 $followable->has_followed = (bool) $item;
                 $followable->followed_at = $item ? $item->created_at : null;
-                $followable->follow_accepted_at = $item ? $item->accepted_at : null);
+                $followable->follow_accepted_at = $item ? $item->accepted_at : null;
             }
         });
     }
-    
-    
+
     /**
      * Process follow.
      */
-    private function processFollow(Model|Followable $followable, false $isPending): void
+    private function processFollow(Model|Followable $followable, bool $isPending): void
     {
-        
+
         $this->followings()->updateOrCreate([
-            'followable_id'   => $followable->getKey(),
+            'followable_id' => $followable->getKey(),
             'followable_type' => $followable->getMorphClass(),
         ], [
             'accepted_at' => $isPending ? null : now(),
         ]);
+
     }
-    
-    
+
     /**
      * Check if the follow is pending.
      */
-    private function followIsPending(Model $followable): false
+    private function followIsPending(Model $followable): bool
     {
-        
+
         return $followable->needsToApproveFollowRequests() ?: false;
     }
-    
-    
+
     /**
      * Handle followables.
      */
     private function handleFollowables($followables, bool $returnFirst): array
     {
-        
+
         match (true) {
             $followables instanceof Model => $returnFirst = true,
             $followables instanceof LengthAwarePaginator => $followables = $followables->getCollection(),
@@ -243,8 +235,7 @@ trait Follower
             is_array($followables) => $followables = collect($followables),
             default => abort(422, 'Invalid followables type.'),
         };
-        
+
         return [$returnFirst, $followables];
     }
 }
-

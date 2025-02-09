@@ -10,10 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Support\Str;
 
 final class Followable extends Model
 {
+    use Dispatchable;
+
     protected $fillable = [
         'user_id',
         'followable_id',
@@ -21,12 +24,17 @@ final class Followable extends Model
         'accepted_at',
     ];
 
+    protected $dispatchesEvents = [
+        'created' => Followed::class,
+        'deleted' => UnFollowed::class,
+    ];
+
     /**
      * Get the table associated with the model.
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = config('followable.followable_table', 'followable');
+        $this->table = config('followable.followables_table', 'followables');
 
         parent::__construct($attributes);
     }
@@ -101,17 +109,6 @@ final class Followable extends Model
     public function scopeNotAccepted(Builder $query): Builder
     {
         return $query->whereNull('accepted_at');
-    }
-
-    /**
-     * Get the events that should be dispatched.
-     */
-    public function dispatchesEvents(): array
-    {
-        return [
-            'followed' => Followed::class,
-            'unfollowed' => UnFollowed::class,
-        ];
     }
 
     /**

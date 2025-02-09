@@ -6,10 +6,13 @@ namespace Akira\Followable\Tests;
 
 use Akira\Followable\FollowableServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
+    //    use LazilyRefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,11 +26,17 @@ abstract class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
+        $migrations = [
+            __DIR__.'/../database/migrations',
+            __DIR__.'/Fixtures/Migrations',
+        ];
+
+        foreach ($migrations as $migration) {
+            foreach (File::files($migration) as $file) {
+                (include $file->getRealPath())->up();
+            }
+        }
+
     }
 
     protected function getPackageProviders($app)

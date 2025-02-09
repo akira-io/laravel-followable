@@ -14,5 +14,5 @@ final class Followed
     /**
      * Create a new Followed instance.
      */
-    public function __construct(public Followable $followable) {}
+    public function __construct(public Followable $follow) {}
 }

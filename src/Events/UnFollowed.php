@@ -14,5 +14,5 @@ final class UnFollowed
     /**
      * Create a new UnFollowed instance.
      */
-    public function __construct(public Followable $followable) {}
+    public function __construct(public Followable $unfollow) {}
 }
