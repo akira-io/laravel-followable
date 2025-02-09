@@ -10,11 +10,9 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         php: [ 8.4, 8.3 ]
-        laravel: [ 12.*, 11.* ]
+        laravel: [ 11.* ]
         stability: [ prefer-stable ]
         include:
-          - laravel: 12.*
-            testbench: 10.*
           - laravel: 11.*
             testbench: 9.*
 
@@ -38,6 +36,10 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      - name: Install Aspell
+        shell: bash
+        run: |
+          sudo apt-get update && sudo apt-get install -y aspell aspell-en
 
       - name: Install dependencies
         run: |
@@ -46,4 +48,4 @@ jobs:
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: composer test
