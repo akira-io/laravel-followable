@@ -13,6 +13,7 @@ jobs:
         php: [ 8.4 ]
         laravel: [ 10.*, 11.* ]
         stability: [ prefer-stable ]
+        collision: [ "^7.10.0", "^8.6.1" ]
         include:
           - laravel: 11.*
             testbench: 9.*
@@ -22,12 +23,8 @@ jobs:
             testbench: 8.*
             carbon: ^2.63
             collision: "^7.10.0"
-        exclude:
-          - laravel: 10.*
-            php: 8.4
-            collision: "^8.6.1"
 
-    name: "PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}"
+    name: "PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - Collision ${{ matrix.collision }} - ${{ matrix.stability }} - ${{ matrix.os }}"
 
     steps:
       - name: Checkout code
