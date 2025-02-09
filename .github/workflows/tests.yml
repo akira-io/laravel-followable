@@ -6,7 +6,7 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
         stability: [ prefer-stable ]
@@ -16,14 +16,16 @@ jobs:
         include:
           - laravel: 11.*
             testbench: ^9.0
-            collision: 8.*
+            collision: ^8.0
           - laravel: 10.*
             testbench: ^8.0
-            collision: 7.*
+            collision: ^7.0
 
         exclude:
           - laravel: 10.*
             collision: 8.*
+          - laravel: 11.*
+            collision: 7.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
