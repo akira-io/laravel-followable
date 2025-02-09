@@ -11,5 +11,8 @@ final class UnFollowed
 {
     use Dispatchable;
 
+    /**
+     * Create a new UnFollowed instance.
+     */
     public function __construct(public Followable $followable) {}
 }

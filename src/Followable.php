@@ -103,6 +103,9 @@ final class Followable extends Model
         return $query->whereNull('accepted_at');
     }
 
+    /**
+     * Get the events that should be dispatched.
+     */
     public function dispatchesEvents(): array
     {
         return [

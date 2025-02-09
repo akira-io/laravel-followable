@@ -11,5 +11,8 @@ final class Followed
 {
     use Dispatchable;
 
+    /**
+     * Create a new Followed instance.
+     */
     public function __construct(public Followable $followable) {}
 }
