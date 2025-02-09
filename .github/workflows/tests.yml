@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-stable ]
+        os: [ ubuntu-latest ]
         php: [ 8.4 ]
         laravel: [ 12.*, 11.* ]
         stability: [ prefer-stable ]
