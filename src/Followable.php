@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Akira\Followable;
 
+use Akira\Followable\Events\Followed;
+use Akira\Followable\Events\UnFollowed;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -101,6 +103,14 @@ final class Followable extends Model
         return $query->whereNull('accepted_at');
     }
 
+    public function dispatchesEvents(): array
+    {
+        return [
+            'followed' => Followed::class,
+            'unfollowed' => UnFollowed::class,
+        ];
+    }
+
     /**
      * Boot the model.
      */
@@ -131,12 +141,4 @@ final class Followable extends Model
             'updated_at' => 'datetime',
         ];
     }
-
-    //    public function dispatchesEvents() {
-    //        return [
-    //            'created' => FollowableCreated::class,
-    //            'deleted' => FollowableDeleted::class,
-    //        ];
-    //    }
-
 }
