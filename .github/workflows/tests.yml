@@ -11,16 +11,23 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         php: [ 8.4 ]
-        laravel: [ 11.*, 10.* ]
+        laravel: [ 10.*, 11.* ]
         stability: [ prefer-stable ]
         include:
           - laravel: 11.*
             testbench: 9.*
             carbon: ^2.63
+            collision: "^8.6.1"
           - laravel: 10.*
             testbench: 8.*
             carbon: ^2.63
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+            collision: "^7.10.0"
+        exclude:
+          - laravel: 10.*
+            php: 8.4
+            collision: "^8.6.1"
+
+    name: "PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}"
 
     steps:
       - name: Checkout code
@@ -33,53 +40,15 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: xdebug
 
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" --no-interaction --no-update
           composer require --dev "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
 
-      - name: Execute tests
+      - name: Run tests
         run: composer test --ci
-
-      # Failure Notification
-      - name: Notify on Failure
-        if: failure()
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{
-               "content": "🚨 Workflow **failed** for **${{ github.repository }}**!",
-               "embeds": [
-                 {
-                   "title": "Workflow Failure (PHP ${{ matrix.php }})",
-                   "description": "Branch: `${{ github.ref_name }}`\nTriggeredBy: `${{ github.triggering_actor}}`\nCommit: `${{ github.sha}}`",
-                   "color": 16711680
-                 }
-               ]
-             }' \
-          ${{ secrets.DISCORD }}
-
-      # Success Notification
-      - name: Notify on Success
-        if: success() && always()
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{
-                "content": "✅ Workflow **succeeded** for **${{ github.repository }}**!",
-                "embeds": [
-                  {
-                    "title": "Success (PHP ${{ matrix.php }})",
-                    "description": "Branch: `${{ github.ref_name }}`\nTriggeredBy: `${{ github.triggering_actor}}`\nCommit: `${{ github.sha}}`",
-                    "color": 65280
-                  }
-                ]
-              }' \
-          ${{ secrets.DISCORD }}
