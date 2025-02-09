@@ -12,24 +12,24 @@ jobs:
         php: [ 8.4 ]
         laravel: [ 12.*, 11.*, 10.* ]
         testbench: [ 10.*, 9.*, 8.* ]
-        collision: [ ^9.0, ^8.0 ]
+        collision: [ ^8.0, ^7.0 ]
         stability: [ prefer-stable ]
         include:
           - laravel: 10.*
             testbench: 8.*
-            collision: ^8.0
+            collision: ^7.0
           - laravel: 11.*
             testbench: 9.*
-            collision: ^9.0
+            collision: ^8.0
           - laravel: 12.*
             testbench: 10.*
-            collision: ^9.0
+            collision: ^8.0
 
         exclude:
           - laravel: 11.*
-            collision: ^8.0
+            collision: ^7.0
           - laravel: 12.*
-            collision: ^8.0
+            collision: ^7.0
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
