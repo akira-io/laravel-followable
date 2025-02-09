@@ -179,9 +179,9 @@ trait Follower
         ?callable $resolver
     ): void {
 
-        $followables->map(function ($followable) use ($followed, $resolver) {
+        $followables->map(function ($followable) use ($followed, $resolver): void {
 
-            $resolver = $resolver ?? fn ($m) => $m;
+            $resolver ??= fn ($m) => $m;
             $followable = $resolver($followable);
 
             if ($followable && in_array(Followable::class, class_uses($followable))) {

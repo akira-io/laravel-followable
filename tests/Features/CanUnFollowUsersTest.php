@@ -5,14 +5,14 @@ declare(strict_types=1);
 use Akira\Followable\Events\UnFollowed;
 use Illuminate\Support\Facades\Event;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Event::fake();
     $this->user1 = Akira\Followable\Tests\Fixtures\User::factory()->create();
     $this->user2 = Akira\Followable\Tests\Fixtures\User::factory()->create();
     $this->user1->follow($this->user2);
 });
 
-test('user can  unfollow users', function () {
+test('user can  unfollow users', function (): void {
 
     $this->user1->unfollow($this->user2);
 
@@ -21,12 +21,9 @@ test('user can  unfollow users', function () {
         ->and($this->user1->followings)->toHaveCount(0);
 });
 
-test('Followed Event can be dispatched in follow process', function () {
+test('Followed Event can be dispatched in follow process', function (): void {
 
     $this->user1->unfollow($this->user2);
 
-    Event::assertDispatched(UnFollowed::class, function ($event) {
-
-        return $event->unfollow->followable->is($this->user2) && $event->unfollow->follower->is($this->user1);
-    });
+    Event::assertDispatched(UnFollowed::class, fn ($event): bool => $event->unfollow->followable->is($this->user2) && $event->unfollow->follower->is($this->user1));
 });

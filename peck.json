@@ -1,9 +1,12 @@
 {
-    "preset": "laravel",
-    "ignore": {
-        "words": [
-            "php"
-        ],
-        "paths": []
-    }
+  "preset": "laravel",
+  "ignore": {
+    "words": [
+      "php",
+      "followables",
+      "desc",
+      "asc"
+    ],
+    "paths": []
+  }
 }

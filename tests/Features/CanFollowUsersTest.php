@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Akira\Followable\Events\Followed;
 use Illuminate\Support\Facades\Event;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Event::fake();
     $this->user1 = Akira\Followable\Tests\Fixtures\User::factory()->create();
     $this->user2 = Akira\Followable\Tests\Fixtures\User::factory()
@@ -13,7 +13,7 @@ beforeEach(function () {
         ->create();
 });
 
-test('user can follow users', function () {
+test('user can follow users', function (): void {
 
     $user = Akira\Followable\Tests\Fixtures\User::factory()->create();
     $this->user1->follow($user);
@@ -22,17 +22,14 @@ test('user can follow users', function () {
         ->and($user->isFollowedBy($this->user1))->toBeTrue();
 });
 
-test('Followed Event can be dispatched in follow process', function () {
+test('Followed Event can be dispatched in follow process', function (): void {
 
     $this->user1->follow($this->user2);
 
-    Event::assertDispatched(Followed::class, function ($event) {
-
-        return $event->follow->followable->is($this->user2) && $event->follow->follower->is($this->user1);
-    });
+    Event::assertDispatched(Followed::class, fn ($event): bool => $event->follow->followable->is($this->user2) && $event->follow->follower->is($this->user1));
 });
 
-test('Private users must be accept follow requests', function () {
+test('Private users must be accept follow requests', function (): void {
 
     $this->user1->follow($this->user2);
 
@@ -43,7 +40,7 @@ test('Private users must be accept follow requests', function () {
 
 });
 
-it('should accept pending requests', function () {
+it('should accept pending requests', function (): void {
 
     $this->user1->follow($this->user2);
 
@@ -56,7 +53,7 @@ it('should accept pending requests', function () {
 
 });
 
-it('should reject pending requests', function () {
+it('should reject pending requests', function (): void {
 
     $this->user1->follow($this->user2);
 
