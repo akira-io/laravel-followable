@@ -1,9 +1,9 @@
 # Akira Laravel Followable
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/akira-io/followable.svg?style=flat-square)](https://packagist.org/packages/akira/laravel-followable)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/akira-io/followable/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/akira/laravel-followable/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/akira-io/followable/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/akira/laravel-followable/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/akira-io/followable.svg?style=flat-square)](https://packagist.org/packages/akira/laravel-followable)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/akira/laravel-followable.svg)](https://packagist.org/packages/akira/laravel-followable)
+[![Total Downloads](https://img.shields.io/packagist/dt/akira/laravel-followable.svg)](https://packagist.org/packages/akira/laravel-followable)
+[![PHPStan Level](https://img.shields.io/badge/phpstan-level%209-brightgreen.svg)](https://phpstan.org)
+[![License](https://img.shields.io/packagist/l/akira/laravel-followable.svg)](https://github.com/akira-io/laravel-followable/blob/main/LICENSE)
 
 **Laravel Followable** is a lightweight and flexible Laravel package that adds follow/unfollow functionality to Eloquent
 models. With an intuitive API, it allows users to follow other users, track entities, and manage relationships

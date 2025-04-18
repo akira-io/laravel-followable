@@ -5,7 +5,8 @@
       "php",
       "followables",
       "desc",
-      "asc"
+      "asc",
+      "commitlint"
     ],
     "paths": []
   }
