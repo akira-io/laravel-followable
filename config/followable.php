@@ -45,7 +45,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This is the fully qualified class name for the followables model. By default,
-    | it points to the \Overtrue\LaravelFollow\Followable model, but you can
+    | it points to the Akira\Followable\Followable model, but you can
     | change it to a custom model if needed.
     |
     */
