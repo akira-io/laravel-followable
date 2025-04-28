@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/akira-io/laravel-followable#readme",
   "dependencies": {
-    "next": "14.2.5",
+    "next": "14.2.26",
     "nextra": "^2.5.3",
     "nextra-theme-docs": "^2.5.3",
     "react": "^18.3.1",
