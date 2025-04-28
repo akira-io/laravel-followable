@@ -1,0 +1,75 @@
+In this section, we’ll explore how to retrieve a user’s following relationships with other users, including the ability to fetch approved, non-approved, and all followings. This feature is essential for managing the follow state of users and gaining deeper insights into these relationships.
+
+### Retrieve User Followings
+
+The Laravel Followable package allows you to easily retrieve the following relationships for a user. You can access both the entire list of followings and more specific subsets like approved or not approved followings.
+
+To get all the users that the current user is following, simply access the followings attribute. This will return all followings, including those that have not yet been approved.
+
+```php
+$user->followings;
+```
+
+This will return a collection of all followings associated with the user, where the user is following others, but it may include both approved and non-approved relationships.
+
+
+### Retrieving Approved Followings
+
+To get only the followings that the user has approved, use the approvedFollowings method:
+
+```php
+$user->approvedFollowings;
+```
+
+This will return a collection of followings that have been accepted by the user, meaning the follow request has been approved.
+
+
+### Retrieving Non-Approved Followings
+
+If you want to fetch the followings that the user has not yet approved, use the notApprovedFollowings method:
+```php
+$user->notApprovedFollowings;
+```
+This collection will contain all the follow requests that the user has received but not yet accepted or rejected.
+
+
+### Looping Through Followings
+
+You can loop through the followings to extract more details about each following relationship. Here’s how you can get
+the created_at date (the date the user followed) and access additional attributes of the followable model (like the user’s nickname).
+
+```php
+foreach ($user->followings()->with('followable')->get() as $following) {
+    // Date when the user followed
+    $following->created_at;
+
+    // Accessing the user attributes
+    $following->followable->name;
+}
+```
+
+###  Example: Fetch and Display Followings
+
+Here’s a full example to demonstrate how to retrieve and display the user’s followings in a view.
+
+Controller
+```php
+// app/Http/Controllers/FollowingsController.php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class FollowingsController extends Controller
+{
+    public function index(User $user)
+    {
+        // Get the user's followings
+        $followings = $user->followings()->with('followable')->get();
+
+        return view('followings.index', compact('followings'));
+    }
+}
+```
+

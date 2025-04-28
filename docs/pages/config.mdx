@@ -1,0 +1,82 @@
+
+The configuration file for the **Laravel Followable** package comes pre-included with the package itself.
+
+To integrate this configuration file into your application, simply follow the steps outlined in the [Installation](installation) section.
+
+This allows you to customize the default settings to fit your application’s specific needs.
+
+The configuration file will be located at **config/followable.php**. You can modify this file to suit your application’s requirements.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Akira\Followable\Followable;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | UUIDs Primary Key
+    |--------------------------------------------------------------------------
+    |
+    | If set to true, UUIDs will be used as the primary key for your models.
+    | By default, it is set to false, meaning auto-incrementing integers are used.
+    |
+    */
+    'uuids' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Foreign Key
+    |--------------------------------------------------------------------------
+    |
+    | This is the name of the foreign key column in the followables table that
+    | will reference the user model. By default, it is set to 'user_id'.
+    |
+    */
+    'user_foreign_key' => 'user_id',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Followables Table Name
+    |--------------------------------------------------------------------------
+    |
+    | This is the name of the table that will store the follower relationships.
+    | The default value is 'followables', but you can change it to any name you prefer.
+    |
+    */
+    'followables_table' => 'followables',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Followables Model Class
+    |--------------------------------------------------------------------------
+    |
+    | This is the fully qualified class name for the followables model. By default,
+    | it points to the \Overtrue\LaravelFollow\Followable model, but you can
+    | change it to a custom model if needed.
+    |
+    */
+    'followables_model' => Followable::class,
+];
+
+```
+
+
+###  Configuration Overview
+
+The configuration file contains the following parameters:
+
+- **UUIDs Primary Key**: Set to `false` by default, this parameter determines whether UUIDs are used as the primary key for your models.
+
+- **User Foreign Key**: The name of the foreign key column in the followables table that references the user model. The default value is `user_id`.
+
+- **Followables Table Name**: The name of the table that stores the follower relationships. The default value is `followables`.
+
+- **Followables Model Class**: The fully qualified class name for the followables model. By default, it points to the `Akira\Followable\Followable` model.
+
+### Customizing the Configuration
+
+With this configuration in place, your application is ready. You can modify the configuration settings to suit your specific needs.

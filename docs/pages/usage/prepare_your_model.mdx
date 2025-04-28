@@ -1,0 +1,92 @@
+Before using the **Laravel Followable** package, you need to prepare your model to enable the `follow` and `unfollow` functionality.
+
+This section will guide you through the steps required to set up your model for following and unfollowing.
+
+
+###  Add the `Follower` Trait
+
+To make your model a follower, you need to add the `Follower` trait to it.
+
+This trait provides the necessary methods to manage followers and followable models.
+
+Here's an example of how you can add the `Follower` trait to your model:
+
+```php
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+use Akira\Followable\Traits\Follower;
+
+class User extends Model
+{
+    use Follower;
+
+    // Your model's code here
+}
+```
+
+ The `Follower` trait will add the following methods to your model:
+
+- `follow(Models $model)`: Follow the given model.
+- `unfollow(Models $model)`: Unfollow the given model.
+- `toggleFollow(Models $model)`: Toggle the follow status of the given model.
+- `isFollowing(Models $model)`: Check if the model is following the given model.
+- `hasRequestedToFollow(Models $model)`: Check if the model has requested to follow the given model.
+- `followings()`: Get the models that the model is following.
+- `approvedFollowings()`: Get the models that the model is following and have approved the follow request.
+- `notApprovedFollowings()`: Get the models that the model is following but have not approved the follow request.
+- `attachFollowStatus($followables, ?callable $resolver=null, bool $returnFirst=false)`: Attach the follow status to the given followables.
+
+
+
+### Add the `Followable` Trait
+
+To make your model followable, you need to add the `Followable` trait to it.
+
+This trait provides the necessary methods to manage followers and followable models.
+
+Here's an example of how you can add the `Followable` trait to your model:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+use Akira\Followable\Traits\Followable;
+
+class User extends Model
+{
+    use Followable;
+
+    // Your model's code here
+}
+```
+
+
+
+
+  The `Followable` trait will add the following methods to your model:
+
+- `needsToApproveFollowRequest()`: Check if the model needs to approve follow requests.
+- `rejectFollowRequestFrom(Models $follower)`: Reject the follow request from the given model.
+- `approveFollowRequestFrom(Models $follower)`: Approve the follow request from the given model.
+- `isFollowedBy(Models $follower)`: Check if the model is followed by the given model.
+- `orderByFollowersCount($query, string $direction = 'desc')`: Order the models by the number of followers.
+- `orderByFollowersCountDesc($query)`: Order the models by the number of followers in descending order.
+- `orderByFollowersCountAsc($query)`: Order the models by the number of followers in ascending order.
+- `followables()`: Get the models that are following the model.
+- `followers()`: Get the models that are following the model and have been approved.
+- `approvedFollowers()`: Get the models that are following the model and have been approved.
+- `notApprovedFollowers()`: Get the models that are following the model but have not been approved.
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+
+Follow the steps below to seamlessly integrate the **Laravel followable package** into your Laravel project.
+
+### Pre-Installation Considerations
+Before you begin, ensure you consult the [Prerequisites](/prerequisites) page to check for important requirements and considerations.
+
+This step will help you avoid any potential configuration issues during the installation process.
+
+### Check for Existing Configuration Files
+If your application already has a `config/followable.php` file, you must **rename** or **remove** it to avoid conflicts.
+
+This package will publish its own default configuration file, which is essential for customizing the package.
+
+### Install the Package via Composer
+To install the package, use Composer – the PHP dependency manager.
+
+Run the following command in your terminal:
+
+```bash copy
+composer require akira-io/laravel-followable
+```
+This command will download and install the package into your Laravel project.
+
+### Publishing the Configuration File
+
+Once the package is installed via Composer, you can publish the config file. Run the following command:
+
+```bash copy
+php artisan vendor:publish --tag="followable-config"
+```
+
+This command will publish the package’s configuration file to your project, allowing you to customize the followable
+settings according to your requirements.
+
+### Publish the Migration File and Run Migrations
+
+Next, publish the package’s migration file by running the following command:
+
+```bash copy
+php artisan vendor:publish --tag="followable-migrations"
+php artisan migrate
+```
+
+## Default Configuration File
+
+Once the package is installed, you can view the default configuration file contents by visiting the [Config file](/config) section.
+In this section, you'll find all the parameters you need to customize according to your application's requirements.
+
+
+
+
+

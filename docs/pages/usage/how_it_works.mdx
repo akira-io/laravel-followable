@@ -1,0 +1,101 @@
+The Laravel Followable package provides a simple and intuitive API to add follow/unfollow functionality to your Eloquent models. It allows users to follow, unfollow, and manage relationships between entities effortlessly.
+This documentation will guide you through how to use the package effectively and illustrate how each feature works using practical examples.
+
+### Follow/Unfollow Methods
+
+The Laravel Followable package provides several methods to manage follow relationships between users. Below are some of the key methods:
+
+#### Follow a User
+To allow a user to follow another user, use the follow() method:
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+
+$user1->follow($user2);
+```
+This will establish a “follow” relationship between user1 and user2.
+
+#### Unfollow a User
+To allow a user to unfollow another user, use the unfollow() method:
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+$user1->unfollow($user2);
+```
+This will remove the “follow” relationship between user1 and user2.
+
+#### Toggle Follow Status
+To toggle the follow status of a user, use the toggleFollow() method:
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+$user1->toggleFollow($user2);
+```
+If user1 is not following user2, this method will follow them. If user1 is already following user2, it will unfollow them.
+
+### Managing Follow Requests
+
+In some cases, you may want to implement a follow request feature, where a user can send a request to follow another user. The Laravel Followable package allows you to manage follow requests.
+
+#### Accept a Follow Request
+
+If user1 receives a follow request from user2, they can accept it using the acceptFollowRequestFrom() method:
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+
+$user1->acceptFollowRequestFrom($user2);
+```
+This will establish a “follow” relationship between user1 and user2.
+
+#### Reject a Follow Request
+
+If user1 does not wish to accept a follow request from user2, they can reject it using the rejectFollowRequestFrom() method:
+
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+$user1->rejectFollowRequestFrom($user2);
+```
+This will reject the follow request without establishing a follow relationship.
+
+### Check Follow Status
+
+The Laravel Followable package allows you to check various follow status conditions.
+
+#### Check if a User is Following Another User
+
+To check if user1 is following user2, use the isFollowing() method:
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+$user1->isFollowing($user2);
+```
+
+This will return true if user1 is following user2, otherwise false.
+
+#### Check if a User is Followed by Another User
+
+To check if user2 is followed by user1, use the isFollowedBy() method:
+
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+$user1->isFollowedBy($user2);
+```
+
+This will return true if user2 is followed by user1, otherwise false.
+
+#### Check if a User Has Requested to Follow Another User
+
+To check if user2 has requested to follow user1, use the hasRequestedToFollow() method:
+```php
+$user1 = User::find(1);
+$user2 = User::find(2);
+
+if ($user2->hasRequestedToFollow($user1)) {
+    echo "User 2 has requested to follow User 1.";
+}
+```
+
+This will return true if user2 has requested to follow user1, otherwise false.

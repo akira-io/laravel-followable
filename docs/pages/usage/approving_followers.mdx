@@ -1,0 +1,77 @@
+By default, the **Followable package** allows users to follow others without any approval mechanism. However,
+if your application requires follow requests to be approved before the following relationship is established, you can define the approval logic in the model.
+
+### Customizing Follow Request Approval
+To implement a follow request approval system, you can customize the behavior of the Followable trait by overriding the needsToApproveFollowRequests() method in your model.
+This allows you to define specific conditions under which follow requests need to be approved.
+
+```php
+// app/Models/User.php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Akira\Followable\Traits\Followable;
+
+class User extends Model
+{
+    use Followable;
+
+    /**
+     * Determine if follow requests need to be approved.
+     *
+     * @return bool
+     */
+    public function needsToApproveFollowRequests()
+    {
+        // Custom logic to determine if follow requests need approval
+        // For example, only users with a certain role need to approve follows
+        return $this->role === 'private_user';  // Example condition: private users need approval
+    }
+}
+```
+
+### Use Cases
+
+**1. Private Accounts:**
+   - Users with private accounts may want to review and approve each follow request before the follower is granted access to their profile. This can be easily achieved by checking the user’s account status or role within the needsToApproveFollowRequests() method.
+
+**2. Business Profiles:**
+   - Businesses or brands may want to filter their followers. You can set specific criteria for approval based on the type of account (e.g., accounts that are not verified may need approval).
+
+**3. Age Restrictions:**
+   - You can implement approval logic based on a user’s age or consent status. For example, only users over a certain age can approve followers, or users who agree to specific terms of service.
+
+
+### Example: Approval Flow
+
+Let’s implement an approval flow using this custom logic. Assume we want users with a role of **private_user** to approve follow requests before allowing the follow.
+
+```php
+// app/Http/Controllers/FollowController.php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class FollowController extends Controller
+{
+    public function follow(Request $request, User $user)
+    {
+        // Get the current authenticated user
+        $currentUser = auth()->user();
+
+        // Check if follow request needs approval
+        if ($user->needsToApproveFollowRequests()) {
+            // Send a follow request to the user (pending approval)
+            $currentUser->follow($user);
+            return redirect()->back()->with('message', 'Follow request sent! Please wait for approval.');
+        }
+
+        // If no approval is required, follow the user immediately
+        $currentUser->follow($user);
+        return redirect()->back()->with('message', 'You are now following this user.');
+    }
+}
+```

@@ -1,0 +1,69 @@
+The Follower::attachFollowStatus() method is a powerful feature that allows you to easily attach the current user’s follow status to a given collection of followable models. This method adds a has_followed attribute to each item in the collection, indicating whether the current user follows that particular model.
+
+### For a Single Model
+You can attach the follow status to a single model, which will return a model with the has_followed attribute.
+
+```php
+$user1 = User::find(1);
+
+// Attach follow status to a single model
+$user->attachFollowStatus($user1);
+```
+The result will include the has_followed attribute, which tells whether the current user follows the given model:
+
+```php
+{
+   //...
+  "has_followed": true
+   //...
+}
+```
+### For Collections, Paginators, LengthAwarePaginators, and Arrays
+
+You can also attach the follow status to a collection of models, paginators, length-aware paginators, or arrays.
+This will add the has_followed attribute to each item in the collection.
+
+```php
+$user = auth()->user();
+
+$users = User::oldest('id')->get();
+
+// Attach follow status to a collection of users
+$users = $user->attachFollowStatus($users);
+
+// Convert to array for easier use
+$users = $users->toArray();
+```
+
+The follow status will be added to each user in the collection:
+
+```php
+[
+    {
+        //...
+        "has_followed": true
+        //...
+    },
+    {
+        //...
+        "has_followed": false
+        //...
+    }
+]
+```
+
+### For Pagination
+
+You can also use attachFollowStatus on paginated results, so when you’re working with pagination, the follow status is added seamlessly.
+
+```php
+$users = User::paginate(20);
+
+// Attach follow status to the paginated users
+$user->attachFollowStatus($users);
+
+// Access follow status for each user
+foreach ($users as $user) {
+    echo $user->has_followed ? 'User follows this model' : 'User does not follow this model';
+}
+```

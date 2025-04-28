@@ -1,0 +1,18 @@
+{
+  "index": "Introduction",
+  "prerequisites": "Prerequisites",
+  "installation": "Installation",
+  "config": "Config File",
+  "usage": "Usage",
+  "contributing": "Contributing",
+  "about": {
+    "title": "About",
+    "type": "page"
+  },
+  "contact": {
+    "title": "Contact ↗",
+    "type": "page",
+    "href": "https://twitter.com/kidiatoliny",
+    "newWindow": true
+  }
+}

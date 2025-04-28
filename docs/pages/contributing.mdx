@@ -1,0 +1,117 @@
+We welcome contributions to the **Project**! Whether you're fixing a bug, adding a feature, or improving the documentation, your contributions are highly valued.
+
+### Steps to Contribute
+
+1. **Fork the Repository**  
+   First, fork the repository on GitHub. This will allow you to make changes and submit a pull request.
+
+2. **Clone Your Fork**  
+   Clone the repository to your local machine:
+
+   ```bash copy
+   git clone https://github.com/your-username/laravel-followable.git
+    ```
+
+3. **Create a Branch**
+    Create a new branch for your changes:
+  
+    ```bash copy
+    git checkout -b feature/your-feature-name
+    ```
+
+
+4. **Make Your Changes**
+
+Make the necessary changes in the codebase. If you’re fixing a bug or adding a feature, please ensure that your code adheres to the coding standards and passes existing tests.
+
+5. **Run Tests**
+
+If you’re adding new functionality or fixing an issue, please write tests to verify that your changes work as expected. This ensures the stability and reliability of the package.
+
+6. **Run Tests**
+Before submitting your pull request, run the tests to make sure everything works properly:
+
+```bash copy
+composer test
+```
+
+7. **Commit Your Changes**
+
+Once you’ve made your changes, commit them to your branch:
+
+```bash copy
+git add .
+git commit -m "feat: add your commit message here"
+```
+
+8. **Push Changes**
+
+Push your changes to your fork on GitHub:
+
+```bash copy
+git push origin feature/your-feature-name
+```
+
+9. **Create a Pull Request**
+
+Go to your GitHub fork, click on the Pull Request tab, and submit a pull request. Make sure to describe your changes in detail, explaining what problem your changes solve or what feature you’ve added.
+
+
+### Local Testing
+
+To test the Package locally on your system, follow the steps below:
+
+1. **Clone the Repository**
+
+If you haven’t already, clone the repository to your local machine:
+
+```bash copy
+git clone https://github.com/akira-io/laravel-followable.git
+```
+
+2. **Install Dependencies**
+
+Navigate to the project directory and install the required dependencies using Composer:
+
+```bash copy
+cd laravel-followable
+composer install
+```
+
+3. **Link the page locally**
+
+To link the package locally, use Laravel’s package:discover command. This allows you to test the package without having to push it to a remote repository.
+
+Run the following command to discover the package:
+
+```bash copy
+composer dump-autoload
+```
+
+Alternatively, you can use the path repository method in your main Laravel project’s composer.json file:
+
+```json copy
+"repositories": [
+    {
+        "type": "path",
+        "url": "/path/to/laravel-followable"
+    }
+]
+```
+Then, run the following command:
+
+```bash copy
+composer require akira-io/laravel-followable
+```
+
+the installation process was covered in the [Installation](/installation) section.
+
+
+### Helpful Resources
+
+- [Laravel Documentation](https://laravel.com/docs)
+- [Composer Documentation](https://getcomposer.org/doc/)
+- [GitHub Workflow Guide](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests)
+
+
+

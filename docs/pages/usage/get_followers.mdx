@@ -1,0 +1,50 @@
+This section explains how to retrieve a user’s followers using the Laravel Followable package.
+Whether you need to fetch all followers, approved followers, or non-approved followers, this guide will help you implement this functionality with ease.
+
+
+### Retrieving Followers
+
+To get all the users following the current user, simply access the followers attribute. This will return a collection of all followers, which may include both approved and non-approved relationships.
+
+```php
+$user->followers;
+```
+
+This will return all followers of the user, including those who have not been approved yet.
+
+
+### Retrieving Approved Followers
+
+To get only the followers that have been approved by the user, use the approvedFollowers method:
+
+```php
+$user->approvedFollowers;
+```
+
+This will return only the followers who have been accepted by the user, meaning the follow request has been approved.
+
+
+### Retrieving Non-Approved Followers
+
+If you want to fetch the followers that have not yet been approved by the user, use the notApprovedFollowers method:
+
+```php
+$user->notApprovedFollowers;
+```
+
+This collection will contain all follow requests that the user has received but not yet accepted or rejected.
+
+
+### Looping Through Followers
+
+You can loop through the followers to extract more details about each relationship. Here’s how you can get the created_at date (the date the user was followed) and access additional attributes of the follower model (like the user’s nickname).
+
+```php
+    foreach ($user->followers()->with('follower')->get() as $follower) {
+    // Date when the user was followed
+    $follower->created_at;
+
+    // Accessing the follower's attributes
+    $follower->follower->name;
+}
+```

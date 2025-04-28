@@ -1,0 +1,134 @@
+In this section, we’ll explore how to perform aggregation queries to count various follow relationships,
+including followings and followers, using the Followable package. These counts can help you generate insights into user
+interactions, such as how many users a specific user is following or how many followers they have.
+
+### Counting Followings
+
+You can easily count the followings for a user using the count() method. This will return the total number of users a particular user is following.
+
+#### Basic Followings Count
+```php
+// Total number of users the current user is following
+$user->followings()->count();
+```
+#### Approved Followings Count
+if your application has follow request approval (as described in the previous section), you can count the number of approved followings:
+
+```php
+// Number of users the current user is following and has approved
+$user->approvedFollowings()->count();
+```
+
+#### Non-Approved Followings Count
+To count the number of followings that have not yet been approved, you can use the notApprovedFollowings() method:
+
+```php
+// Number of users the current user is following but has not approved
+$user->notApprovedFollowings()->count();
+```
+
+### Followings Count with Additional Conditions
+You can also apply additional conditions to the followings count. For example, if you want to count only the followings that were created within a specific date range, you can do so like this:
+
+```php
+// Count followings created within a specific date range
+$user->followings()
+    ->whereBetween('created_at', ['2023-01-01', '2023-12-31'])
+    ->count();
+```
+
+### Counting Followers
+
+You can also count the followers for a user using the same approach. This will return the total number of users following a particular user.
+
+#### Basic Followers Count
+```php
+// Total number of users following the current user
+$user->followers()->count();
+```
+#### Approved Followers Count
+If your application has follow request approval, you can count the number of approved followers:
+
+```php
+// Number of users following the current user and have been approved
+$user->approvedFollowers()->count();
+```
+#### Non-Approved Followers Count
+To count the number of followers that have not yet been approved, you can use the notApprovedFollowers() method:
+
+```php
+// Number of users following the current user but have not been approved
+$user->notApprovedFollowers()->count();
+```
+### Using withCount to Retrieve Follow Counts in One Query
+
+You can also use the withCount() method to retrieve the counts of followings and followers in a single query.
+You can retrieve the follow counts (such as followings and followers) directly when retrieving a collection of users. The withCount method allows you to fetch aggregate data along with your usual model queries.
+
+#### Basic withCount Usage
+
+```php
+// Retrieve all users with their followings and followers count
+$users = User::withCount(['followings', 'followers'])->get();
+```
+
+This will return a collection of users, each with additional attributes followings_count and followers_count, representing the number of followings and followers for each user.
+
+#### Using withCount for Approved Followings and Followers
+
+You can also use withCount to get the counts of approved followings and followers:
+
+```php
+// Retrieve all users with their approved followings and followers count
+$users = User::withCount(['approvedFollowings', 'approvedFollowers'])->get();
+```
+This will return a collection of users, each with additional attributes approved_followings_count and approved_followers_count, representing the number of approved followings and followers for each user.
+
+
+#### Accessing Aggregated Data
+
+Once the data is retrieved, you can access the aggregated counts via dynamic properties. For example, each user will now have a followings_count and followers_count attribute.
+
+```php
+foreach ($users as $user) {
+    // Access the total number of followings and followers
+    echo $user->followings_count;
+    echo $user->followers_count;
+
+    // Or access the count of approved followings and followers
+    echo $user->approved_followings_count;
+    echo $user->approved_followers_count;
+}
+```
+
+#### Counting with Custom Relationships
+
+You can also retrieve counts for more complex relationships such as approved and not approved followings. Here’s an example of how to aggregate these counts and apply additional conditions:
+```php
+// Retrieve all users with their approved and not approved followings
+$users = User::withCount(['approvedFollowings', 'notApprovedFollowings'])->get();
+
+foreach ($users as $user) {
+    echo "User {$user->name} has {$user->approved_followings_count} approved followings and {$user->not_approved_followings_count} not approved followings.";
+}
+```
+
+### Order by Followers Count
+
+Sometimes, you may want to query users based on how many followers they have. You can use the following methods to order users by their followers count.
+
+Available Methods:
+•	orderByFollowersCountDesc()
+•	orderByFollowersCountAsc()
+•	orderByFollowersCount(string $direction = 'desc')
+
+#### Example: Order Users by Followers Count
+```php
+// Order users by followers count in descending order
+$users = User::orderByFollowersCountDesc()->get();
+
+// Get the most popular user (with the highest follower count)
+$mostPopularUser = User::orderByFollowersCountDesc()->first();
+// Get the least popular user (with the lowest follower count)
+$leastPopularUser = User::orderByFollowersCountAsc()->first();
+```
