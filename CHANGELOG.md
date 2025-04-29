@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/akira-io/laravel-followable/compare/0.1.0...0.1.1) (2025-04-29)
+
+
+### Bug Fixes
+
+* fix map follow status ([6c31dc3](https://github.com/akira-io/laravel-followable/commit/6c31dc3c77a2df4d55e0c29e866cf0184da45345))
+* update followables model reference to Akira\Followable\Followable ([fc09ce3](https://github.com/akira-io/laravel-followable/commit/fc09ce3e69d30c849360c91d86ca207f1161035b))
+
 # 0.1.0 (2025-02-09)
 
 
