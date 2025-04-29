@@ -134,10 +134,10 @@ trait Follower
     /**
      * Attach follow status to followables.
      */
-    public function attachFollowStatus($followables, ?callable $resolver = null, bool $returnFirst = false): mixed
+    public function attachFollowStatus(Model|\Illuminate\Support\Collection|LengthAwarePaginator|Paginator|LazyCollection|array $followables, bool $returnFirst = false, ?callable $resolver = null): mixed
     {
 
-        [$returnFirst, $followables] = $this->handleFollowables($followables, $returnFirst);
+        $followables = $this->handleFollowables($followables);
 
         $followed = $this->followings()->get();
 
@@ -173,24 +173,25 @@ trait Follower
     /**
      * Map followables.
      */
-    private function mapFollowables(
-        mixed $followables,
-        Collection $followed,
-        ?callable $resolver
-    ): void {
+    private function mapFollowables(\Illuminate\Support\Collection $followables, Collection $followed, ?callable $resolver): void
+    {
 
         $followables->map(function ($followable) use ($followed, $resolver): void {
 
             $resolver ??= fn ($m) => $m;
+
             $followable = $resolver($followable);
 
-            if ($followable && in_array(Followable::class, class_uses($followable))) {
-                $item = $followed->where('followable_id', $followable->getKey())
+            if (is_object((object) $followable)
+                && in_array(Follower::class, class_uses_recursive((object) $followable))
+            ) {
+                $item = $followed
+                    ->where('followable_id', $followable->getKey())
                     ->where('followable_type', $followable->getMorphClass())
                     ->first();
                 $followable->has_followed = (bool) $item;
-                $followable->followed_at = $item ? $item->created_at : null;
-                $followable->follow_accepted_at = $item ? $item->accepted_at : null;
+                $followable->followed_at = $item?->created_at;
+                $followable->follow_accepted_at = $item?->accepted_at;
             }
         });
     }
@@ -222,20 +223,16 @@ trait Follower
     /**
      * Handle followables.
      */
-    private function handleFollowables($followables, bool $returnFirst): array
+    private function handleFollowables(Model|\Illuminate\Support\Collection|LengthAwarePaginator|Paginator|LazyCollection|array $followables): \Illuminate\Support\Collection
     {
 
-        match (true) {
-            $followables instanceof Model => $returnFirst = true,
+        return match (true) {
+            $followables instanceof Model => collect([$followables]),
             $followables instanceof LengthAwarePaginator => $followables = $followables->getCollection(),
-            $followables instanceof Paginator || $followables instanceof CursorPaginator => $followables
-                = collect($followables->items()),
-            $followables instanceof LazyCollection => $followables
-                = collect(iterator_to_array($followables->getIterator())),
-            is_array($followables) => $followables = collect($followables),
-            default => abort(422, 'Invalid followables type.'),
+            $followables instanceof Paginator || $followables instanceof CursorPaginator => $followables = collect($followables->items()),
+            $followables instanceof LazyCollection => $followables = collect(iterator_to_array($followables->getIterator())),
+            default => collect($followables)
         };
 
-        return [$returnFirst, $followables];
     }
 }
