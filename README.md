@@ -1,4 +1,4 @@
-# Akira Laravel Followable
+# Laravel Followable
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/akira/laravel-followable.svg)](https://packagist.org/packages/akira/laravel-followable)
 [![Total Downloads](https://img.shields.io/packagist/dt/akira/laravel-followable.svg)](https://packagist.org/packages/akira/laravel-followable)
