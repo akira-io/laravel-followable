@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.2.0](https://github.com/akira-io/laravel-followable/compare/0.1.1...0.2.0) (2025-05-17)
+
+
+### Features
+
+* enhance followable functionality and improve test coverage ([4fc0a35](https://github.com/akira-io/laravel-followable/commit/4fc0a354c3c1e070e6ecc0474b27b71882f43ea6))
+
 ## [0.1.1](https://github.com/akira-io/laravel-followable/compare/0.1.0...0.1.1) (2025-04-29)
 
 
