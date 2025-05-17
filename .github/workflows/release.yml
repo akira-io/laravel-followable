@@ -13,9 +13,9 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD }}
           color: "2105893"
-          username: "Filament Tool Kit"
+          username: "Followable"
           avatar_url: "https://avatars.githubusercontent.com/u/116525492?s=96&v=4"
           content: "||@everyone||"
-          footer_title: "Filament Tool Kit"
+          footer_title: "Followable"
           footer_icon_url: "https://avatars.githubusercontent.com/u/116525492?s=96&v=4"
           footer_timestamp: true

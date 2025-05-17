@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\LazyCollection;
 
 use function class_uses;
@@ -26,6 +27,7 @@ trait Follower
      */
     public function follow(Model $followable): array
     {
+
         if ($followable->is($this)) {
             throw new CannotFollowYourSelfException();
         }
@@ -59,6 +61,7 @@ trait Follower
      */
     public function toggleFollow(Model $followable): void
     {
+
         $this->isFollowing($followable)
             ? $this->unfollow($followable)
             : $this->follow($followable);
@@ -108,10 +111,11 @@ trait Follower
      */
     public function followings(): HasMany
     {
+
         return $this->hasMany(
             config('followable.followables_model', Followable::class),
             config('follow.user_foreign_key', 'user_id'),
-            $this->getKeyName()
+            $this->getKeyName(),
         );
     }
 
@@ -120,6 +124,7 @@ trait Follower
      */
     public function approvedFollowings(): HasMany
     {
+
         return $this->followings()->accepted();
     }
 
@@ -128,18 +133,22 @@ trait Follower
      */
     public function notApprovedFollowings(): HasMany
     {
+
         return $this->followings()->notAccepted();
     }
 
     /**
      * Attach follow status to followables.
      */
-    public function attachFollowStatus(Model|\Illuminate\Support\Collection|LengthAwarePaginator|Paginator|LazyCollection|array $followables, bool $returnFirst = false, ?callable $resolver = null): mixed
-    {
+    public function attachFollowStatus(
+        Model|SupportCollection|LengthAwarePaginator|Paginator|LazyCollection|array $followables,
+        bool $returnFirst = false,
+        ?callable $resolver = null,
+    ): mixed {
 
         $followables = $this->handleFollowables($followables);
 
-        $followed = $this->followings()->get();
+        $followed = $this->followings;
 
         $this->mapFollowables($followables, $followed, $resolver);
 
@@ -173,22 +182,26 @@ trait Follower
     /**
      * Map followables.
      */
-    private function mapFollowables(\Illuminate\Support\Collection $followables, Collection $followed, ?callable $resolver): void
-    {
+    private function mapFollowables(
+        SupportCollection $followables,
+        Collection $followed,
+        ?callable $resolver,
+    ): void {
 
-        $followables->map(function ($followable) use ($followed, $resolver): void {
+        $followedMap = $followed->keyBy(fn ($item): string => "{$item->followable_type}:{$item->followable_id}");
 
-            $resolver ??= fn ($m) => $m;
+        $resolver ??= fn ($m) => $m;
+
+        $followables->each(function ($followable) use ($followedMap, $resolver): void {
 
             $followable = $resolver($followable);
 
-            if (is_object((object) $followable)
-                && in_array(Follower::class, class_uses_recursive((object) $followable))
+            if (is_object($followable)
+                && in_array(Follower::class, class_uses_recursive($followable))
             ) {
-                $item = $followed
-                    ->where('followable_id', $followable->getKey())
-                    ->where('followable_type', $followable->getMorphClass())
-                    ->first();
+                $key = "{$followable->getMorphClass()}:{$followable->getKey()}";
+                $item = $followedMap->get($key);
+
                 $followable->has_followed = (bool) $item;
                 $followable->followed_at = $item?->created_at;
                 $followable->follow_accepted_at = $item?->accepted_at;
@@ -208,7 +221,6 @@ trait Follower
         ], [
             'accepted_at' => $isPending ? null : now(),
         ]);
-
     }
 
     /**
@@ -223,16 +235,18 @@ trait Follower
     /**
      * Handle followables.
      */
-    private function handleFollowables(Model|\Illuminate\Support\Collection|LengthAwarePaginator|Paginator|LazyCollection|array $followables): \Illuminate\Support\Collection
-    {
+    private function handleFollowables(
+        Model|SupportCollection|LengthAwarePaginator|Paginator|LazyCollection|array $followables,
+    ): SupportCollection {
 
         return match (true) {
             $followables instanceof Model => collect([$followables]),
             $followables instanceof LengthAwarePaginator => $followables = $followables->getCollection(),
-            $followables instanceof Paginator || $followables instanceof CursorPaginator => $followables = collect($followables->items()),
-            $followables instanceof LazyCollection => $followables = collect(iterator_to_array($followables->getIterator())),
+            $followables instanceof Paginator || $followables instanceof CursorPaginator => $followables
+                = collect($followables->items()),
+            $followables instanceof LazyCollection => $followables
+                = collect(iterator_to_array($followables->getIterator())),
             default => collect($followables)
         };
-
     }
 }
