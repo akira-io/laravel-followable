@@ -9,6 +9,11 @@
     "release": "release-it"
   },
   "release-it": {
+    "hooks": {
+      "before:init": [
+        "composer test"
+      ]
+    },
     "git": {
       "commitMessage": "chore(release): ${version}"
     },

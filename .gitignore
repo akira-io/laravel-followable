@@ -29,5 +29,4 @@ phpunit.xml
 phpstan.neon
 testbench.yaml
 /coverage
-/docs/.next
-/docs/node_modules
+.DS_Store
