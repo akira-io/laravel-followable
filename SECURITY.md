@@ -32,6 +32,7 @@ steps:
 ### Please DO
 
 1. **Email us directly** at kidiatoliny@akira-io.com with:
+
 - A description of the vulnerability
 - Steps to reproduce the issue
 - Potential impact
@@ -40,6 +41,7 @@ steps:
 2. **Use the subject line:** `[SECURITY] Laravel Followable - Brief Description`
 
 3. **Include:**
+
 - Your contact information
 - Laravel Followable version affected
 - Laravel version
@@ -184,7 +186,7 @@ Security updates will be released as patch versions and announced through:
 
 - GitHub Security Advisories
 - Package changelog
-- Email notification to security@akira-io.com subscribers
+- Email notification to kidiatoliny@akira-io.com subscribers
 
 ## Acknowledgments
 
