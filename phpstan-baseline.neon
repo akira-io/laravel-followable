@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Trait Akira\\Followable\\Concerns\\Followable is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/Concerns/Followable.php
+
+		-
+			message: '#^Trait Akira\\Followable\\Concerns\\Follower is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/Concerns/Follower.php
