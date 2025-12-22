@@ -1,13 +1,14 @@
 {
-  "preset": "laravel",
-  "ignore": {
-    "words": [
-      "php",
-      "followables",
-      "desc",
-      "asc",
-      "commitlint"
-    ],
-    "paths": []
-  }
+    "preset": "laravel",
+    "ignore": {
+        "words": [
+            "php",
+            "followables",
+            "desc",
+            "asc",
+            "commitlint",
+            "roadmap"
+        ],
+        "paths": []
+    }
 }
