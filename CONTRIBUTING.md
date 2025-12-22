@@ -45,7 +45,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 - PHP 8.3 or higher
 - Composer
-- Laravel 10.x, 11.x, or 12.x
+- Laravel 11.x or 12.x
 
 ### Installation
 

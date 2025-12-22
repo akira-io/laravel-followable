@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Akira\Followable\Tests;
 
-use Akira\Debugger\DebuggerServiceProvider;
 use Akira\Followable\FollowableServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\File;
@@ -44,7 +43,6 @@ abstract class TestCase extends Orchestra
     {
         return [
             FollowableServiceProvider::class,
-            DebuggerServiceProvider::class,
         ];
     }
 }

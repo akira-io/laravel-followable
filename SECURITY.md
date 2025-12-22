@@ -16,7 +16,6 @@ Laravel Followable supports:
 
 - Laravel 12.x
 - Laravel 11.x
-- Laravel 10.x
 - PHP 8.3+
 
 ## Reporting a Vulnerability
