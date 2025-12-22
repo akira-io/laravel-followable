@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Akira\Followable\Tests;
 
+use Akira\Debugger\AkiraServiceProvider;
 use Akira\Followable\FollowableServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\File;
@@ -39,10 +40,11 @@ abstract class TestCase extends Orchestra
 
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             FollowableServiceProvider::class,
+            AkiraServiceProvider::class,
         ];
     }
 }
