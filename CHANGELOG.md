@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.2.1](https://github.com/akira-io/laravel-followable/compare/0.2.0...0.2.1) (2025-12-22)
+
 # [0.2.0](https://github.com/akira-io/laravel-followable/compare/0.1.1...0.2.0) (2025-05-17)
 
 
