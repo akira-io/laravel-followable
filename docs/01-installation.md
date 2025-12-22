@@ -7,7 +7,7 @@ This guide will walk you through installing and setting up Laravel Followable in
 Before installing Laravel Followable, ensure your environment meets the following requirements:
 
 - **PHP**: 8.3 or higher
-- **Laravel**: 10.x, 11.x, or 12.x
+- **Laravel**: 11.x or 12.x
 - **Database**: MySQL 5.7+, PostgreSQL 9.6+, SQLite 3.8+, or SQL Server 2017+
 
 ## Installing the Package
